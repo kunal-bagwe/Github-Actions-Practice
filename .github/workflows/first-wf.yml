@@ -25,6 +25,6 @@ jobs:
       - name: list files
         run: ls
       - name: read a file
-        run: cat kafka-req-topic.yaml
+        run: cat ../kafka-req-topic.yaml
 
 
