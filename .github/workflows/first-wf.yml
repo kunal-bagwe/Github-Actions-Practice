@@ -23,8 +23,8 @@ jobs:
       - name: working dir
         run: pwd
       - name: list files
-        run: ls ..
+        run: ls ../..
       - name: read a file
-        run: cat ../kafka-req-topic.yaml
+        run: cat ../../kafka-req-topic.yaml
 
 
