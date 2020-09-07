@@ -1,0 +1,19 @@
+name: Shell Commands
+
+on: [push]
+
+jobs:
+  run-shell-cmd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo a string
+        run: echo "Hello from the first Github workflow example"
+      - name: multiline script
+        run: |
+          echo "Hii Der"
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
+          chmod +x ./kind
+          mv ./kind /some-dir-in-your-PATH/kind
+          kind 
+
+
