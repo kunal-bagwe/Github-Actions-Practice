@@ -22,9 +22,10 @@ jobs:
         run: echo "About to read a file"
       - name: working dir
         run: pwd
-      - name: list files
-        run: ls ../..
-      - name: read a file
-        run: cat ../../kafka-req-topic.yaml
-
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: List files
+        run: |
+          pwd
+          ls -a
 
