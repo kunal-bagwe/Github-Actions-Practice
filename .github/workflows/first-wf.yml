@@ -21,6 +21,6 @@ jobs:
       - name: echo a string
         run: echo "About to read a file"
       - name: read a file
-        run: pwd && ls
+        run: cat ../kafka-req-topic.yaml
 
 
