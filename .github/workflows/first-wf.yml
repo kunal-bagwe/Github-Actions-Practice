@@ -34,4 +34,7 @@ jobs:
       - name: Run Kind Cluster
         run: |
           bash registry.sh
+      - name: Test deployment
+        run: |
+          kubectl --help
 
