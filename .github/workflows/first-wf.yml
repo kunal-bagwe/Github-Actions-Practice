@@ -12,8 +12,17 @@ jobs:
   integration-test-suite:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout the current repo
         uses: actions/checkout@v1
+      - name: Checkout the fission repo
+        uses: action/checkout@v1
+        with:
+          repository: fission/keda-connectors 
+          path: main
+      - name: List dir
+        run: |
+          pwd
+          ls 
       - name: Install Tools
         run: |
           curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
@@ -28,6 +37,7 @@ jobs:
           helm install keda kedacore/keda --namespace keda
       - name: Check status
         run: kubectl wait --for=condition=Ready pods --all -n keda
+
 #      - name: Test deployment
 #        run: |
 #          cd server/
