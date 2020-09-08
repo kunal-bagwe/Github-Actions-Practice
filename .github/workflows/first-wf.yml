@@ -15,7 +15,7 @@ jobs:
       - name: Checkout the current repo
         uses: actions/checkout@v1
       - name: Checkout the fission repo
-        uses: action/checkout@v1
+        uses: actions/checkout@v1
         with:
           repository: fission/keda-connectors 
           path: main
