@@ -14,11 +14,9 @@ jobs:
     steps:
       - name: Checkout the current repo
         uses: actions/checkout@v1
-      - name: Checkout the fission repo
-        uses: actions/checkout@master
-        with:
-          repository: fission/keda-connectors 
-          #ref: refs/heads/release
+      - name: Clone the fission repository
+        run: |
+          git clone https://github.com/fission/keda-connectors.git
       - name: List dir
         run: |
           pwd
