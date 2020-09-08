@@ -1,31 +1,33 @@
 name: Shell Commands
 
-on: [push]
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  run-shell-cmd:
-    runs-on: ubuntu-latest
-    steps:
-      - name: echo a string
-        run: echo "Hello from the first Github workflow example"
-      - name: multiline script
-        run: |
-          echo "Hii Der"
-          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
-          chmod +x ./kind
-          sudo mv ./kind /usr/local/bin/
-          kind
+#  run-shell-cmd:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: echo a string
+#        run: echo "Hello from the first Github workflow example"
+#      - name: multiline script
+#        run: |
+#          echo "Hii Der"
+#          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
+#          chmod +x ./kind
+#          sudo mv ./kind /usr/local/bin/
+#          kind
   read-file:
     runs-on: ubuntu-latest
     steps:
-      - name: echo a string
-        run: echo "About to read a file"
-      - name: working dir
-        run: pwd
       - name: Checkout
         uses: actions/checkout@v1
       - name: List files
         run: |
           pwd
-          ls -a
+          cat kafka-req.topic.yaml
 
