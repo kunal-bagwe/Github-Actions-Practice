@@ -9,24 +9,12 @@ on:
       - master
 
 jobs:
-#  run-shell-cmd:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: echo a string
-#        run: echo "Hello from the first Github workflow example"
-#      - name: multiline script
-#        run: |
-#          echo "Hii Der"
-#          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
-#          chmod +x ./kind
-#          sudo mv ./kind /usr/local/bin/
-#          kind
-  read-file:
+  integration-test-suite:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Install Kind
+      - name: Install Tools
         run: |
           curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
           chmod +x ./kind
@@ -34,9 +22,15 @@ jobs:
       - name: Run Kind Cluster
         run: |
           bash registry.sh
-      - name: Test deployment
-        run: |
-          cd server/
-          docker build -t localhost:5000/http-server:latest .
-          docker push localhost:5000/http-server:latest
+          helm repo add kedacore https://kedacore.github.io/charts
+          helm repo update
+          kubectl create namespace keda
+          helm install keda kedacore/keda --namespace keda
+      - name: Check status
+        run: kubectl get pods -n keda
+#      - name: Test deployment
+#        run: |
+#          cd server/
+#          docker build -t localhost:5000/http-server:latest .
+#          docker push localhost:5000/http-server:latest
 
