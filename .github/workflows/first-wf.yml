@@ -17,10 +17,6 @@ jobs:
       - name: Clone the fission repository
         run: |
           git clone https://github.com/fission/keda-connectors.git
-      - name: List dir
-        run: |
-          pwd
-          ls 
       - name: Install Tools
         run: |
           curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
@@ -33,9 +29,11 @@ jobs:
           helm repo update
           kubectl create namespace keda
           helm install keda kedacore/keda --namespace keda
-      - name: Check status
-        run: kubectl wait --for=condition=Ready pods --all -n keda
-
+      - name: Create Docker Images
+        run: |
+          cd server/
+          docker build -t localhost:5000/http-server:latest .
+          docker push localhost:5000/http-server:latest
 #      - name: Test deployment
 #        run: |
 #          cd server/
