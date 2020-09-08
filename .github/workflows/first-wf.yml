@@ -17,7 +17,7 @@ jobs:
       - name: Checkout the fission repo
         uses: actions/checkout@master
         with:
-          name: fission/keda-connectors 
+          repository: fission/keda-connectors 
           #ref: refs/heads/release
       - name: List dir
         run: |
