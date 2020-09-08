@@ -27,7 +27,7 @@ jobs:
           kubectl create namespace keda
           helm install keda kedacore/keda --namespace keda
       - name: Check status
-        run: kubectl get pods -n keda
+        run: kubectl wait --for=condition=Available pods --timeout=15s --all -n keda
 #      - name: Test deployment
 #        run: |
 #          cd server/
