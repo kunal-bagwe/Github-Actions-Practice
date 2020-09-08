@@ -29,5 +29,5 @@ jobs:
       - name: List files
         run: |
           pwd
-          cat kafka-req.topic.yaml
+          cat kafka-req-topic.yaml
 
