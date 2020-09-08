@@ -36,5 +36,7 @@ jobs:
           bash registry.sh
       - name: Test deployment
         run: |
-          kubectl --help
+          cd server/
+          docker build -t localhost:5000/http-server:latest .
+          docker push localhost:5000/http-server:latest
 
