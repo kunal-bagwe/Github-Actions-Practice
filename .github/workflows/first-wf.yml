@@ -50,7 +50,8 @@ jobs:
           kubectl apply -f kafka-cluster.yaml
           echo "Kafka Cluster is getting up."
           sleep 10m
-          kubectl wait --for=condition=Ready pods --all -n kafka
+          kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=my-cluster-test -n kafka
+          kubectl wait --for=condition=Ready pod  -l name=strimzi-cluster-operator -n kafka
       - name: Create Kafka topics
         run: |
           cd kafka/
@@ -63,6 +64,7 @@ jobs:
           kubectl apply -f server.yaml
       - name: Deploy Keda Connector and Keda ScaledObject
         run: |
+          cd kafka/ 
           kubectl apply -f keda-deployment.yml
           kubectl apply -f Keda-ScaledObj.yml 
 
