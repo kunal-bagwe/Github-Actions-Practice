@@ -45,8 +45,10 @@ jobs:
           cd kafka/
           kubectl create namespace kafka
           curl -L http://strimzi.io/install/latest | sed 's/namespace: .*/namespace: kafka/' | kubectl apply -f - -n kafka
-          sleep 15
+          sleep 5s
           kubectl apply -f kafka-cluster.yaml
+          echo "Kafka Cluster is getting up."
+          sleep 10m
           kubectl wait --for=condition=Ready pods --all -n kafka
 
 
