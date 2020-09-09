@@ -50,5 +50,17 @@ jobs:
           echo "Kafka Cluster is getting up."
           sleep 10m
           kubectl wait --for=condition=Ready pods --all -n kafka
-
+      - name: Create Kafka topics
+        run: |
+          kubectl apply -f kafka-req-topic.yaml 
+          kubectl apply -f kafka-err-topic.yaml
+          kubectl apply -f kafka-res-topic.yaml
+      - name: Bring up HTTP Server
+        run: |
+          cd server/
+          kubectl apply -f server.yaml
+      - name: Deploy Keda Connector and Keda ScaledObject
+        run: |
+          kubectl apply -f keda-deployment.yml
+          kubectl apply -f Keda-ScaledObj.yml 
 
