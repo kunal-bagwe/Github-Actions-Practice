@@ -38,6 +38,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 				http.StatusInternalServerError)
 		}
 		results = string(body)
+		fmt.Println(results)
 		fmt.Fprint(w,results)
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
