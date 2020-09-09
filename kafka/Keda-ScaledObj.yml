@@ -3,6 +3,8 @@ kind: ScaledObject
 metadata:
   name: kafka-scaledobject
   namespace: kafka
+  labels:
+    keda: kafka
 spec:
   scaleTargetRef:
     deploymentName: keda-deployment

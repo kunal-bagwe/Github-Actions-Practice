@@ -4,7 +4,7 @@ metadata:
   name: keda-deployment
   namespace: kafka
   labels:
-    app: test
+    keda: kafka
 spec:
   replicas: 1
   selector:

@@ -28,7 +28,7 @@ jobs:
           helm repo update
           kubectl create namespace keda
           helm install keda kedacore/keda --namespace keda
-          kubectl wait --for=condition=Ready pods --all -n keda 
+          kubectl wait --for=condition=Ready pods --all -l keda=kafka -n keda
       - name: Create Docker Image for HTTP server
         run: |
           cd server/
