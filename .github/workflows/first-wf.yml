@@ -39,10 +39,13 @@ jobs:
           cd keda-connectors/kafka-http-connector/
           docker build -t localhost:5000/kafka-connector:latest .
           docker push localhost:5000/kafka-connector:latest
-      
-#      - name: Test deployment
-#        run: |
-#          cd server/
-#          docker build -t localhost:5000/http-server:latest .
-#          docker push localhost:5000/http-server:latest
+
+      - name: Deploy Kafka cluster
+        run: |
+          cd kafka/
+          kubectl create namespace kafka
+          curl -L http://strimzi.io/install/latest | sed 's/namespace: .*/namespace: kafka/' | kubectl apply -f - -n kafka
+          kubectl apply -f kafka-cluster.yaml
+          kubectl wait --for=condition=Ready pods --all -n kafka
+
 
