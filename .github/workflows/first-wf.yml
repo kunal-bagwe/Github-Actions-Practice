@@ -71,6 +71,7 @@ jobs:
           curl -L http://strimzi.io/install/latest | sed 's/namespace: .*/namespace: kafka/' | kubectl apply -f - -n kafka
           kubectl apply -f kafka-producer.yaml      
           kubectl -n kafka run kafka-producer --image=strimzi/kafka:latest-kafka-2.4.0 --restart=Never -- bin/kafka-console-producer.sh --broker-list my-cluster-test-kafka-bootstrap:9092 --topic request-topic
-          sleep 30s
+          kubectl wait --for=condition=Ready pod kafka-producer -n kafka
+          sleep 10s
           kubectl logs kafka-producer -n kafka
           sleep 20s
