@@ -47,9 +47,9 @@ jobs:
           sleep 5s
           kubectl apply -f kafka-cluster.yaml
           echo "Kafka Cluster is getting up."
-          sleep 10m
-          kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=my-cluster-test -n kafka
-          kubectl wait --for=condition=Ready pod  -l name=strimzi-cluster-operator -n kafka
+          # sleep 10m
+          kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=my-cluster-test,app.kubernetes.io/managed-by=strimzi-cluster-operator,app.kubernetes.io/name=kafka,strimzi.io/kind=Kafka --timeout=-1s -n kafka
+          kubectl wait --for=condition=Ready pod  -l name=strimzi-cluster-operator,strimzi.io/kind=cluster-operator --timeout=-1s -n kafka
       - name: Create Kafka topics
         run: |
           cd kafka/
@@ -65,13 +65,8 @@ jobs:
           cd kafka/ 
           kubectl apply -f keda-deployment.yml
           kubectl apply -f Keda-ScaledObj.yml 
-      - name: Run Kafka Producer
-        run: |
-          cd kafka/
-          curl -L http://strimzi.io/install/latest | sed 's/namespace: .*/namespace: kafka/' | kubectl apply -f - -n kafka
-          kubectl apply -f kafka-producer.yaml      
-          kubectl -n kafka run kafka-producer --image=strimzi/kafka:latest-kafka-2.4.0 --restart=Never -- bin/kafka-console-producer.sh --broker-list my-cluster-test-kafka-bootstrap:9092 --topic request-topic
-          kubectl wait --for=condition=Ready pod kafka-producer -n kafka
-          sleep 10s
-          kubectl logs kafka-producer -n kafka
-          sleep 20s
+          #    - name: Run Kafka Producer
+          #run: |
+          #cd kafka/
+          #kubectl apply -f kafka-producer.yaml
+
