@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: hello-world-producer
-        image: strimzi/hello-world-producer:latest
+        image: localhost:5000/producer:latest #strimzi/hello-world-producer:latest
         env:
           - name: BOOTSTRAP_SERVERS
             value: my-cluster-test-kafka-bootstrap:9092

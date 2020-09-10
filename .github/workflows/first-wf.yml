@@ -21,6 +21,10 @@ jobs:
           curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
           chmod +x ./kind
           sudo mv ./kind /usr/bin/
+      - name: Pull Producer Image
+        run: |
+          docker pull strimzi/hello-world-producer:latest
+          docker tag strimzi/hello-world-producer:latest localhost:5000/producer:latest
       - name: Run Kind Cluster
         run: |
           ./registry.sh
@@ -33,6 +37,7 @@ jobs:
           cd server/
           docker build -t localhost:5000/http-server:latest .
           docker push localhost:5000/http-server:latest
+          docker push localhost:5000/producer:latest
       - name: Create Docker Image for KEDA Connector
         run: |
           cd keda-connectors/kafka-http-connector/
@@ -62,7 +67,7 @@ jobs:
       - name: Produce messages
         run: |
           cd kafka/
-          kubectl apply -f kafka-producer.yaml
+          kubectl apply -f kafka-producer.yml
           kubectl wait -f kafka-producer.yaml --for=condition=ready --timeout=-1s -n kafka
       - name: Bring up HTTP Server
         run: |
