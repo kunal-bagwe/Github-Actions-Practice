@@ -25,6 +25,7 @@ jobs:
         run: |
           docker pull strimzi/hello-world-producer:latest
           docker tag strimzi/hello-world-producer:latest localhost:5000/producer:latest
+          docker images
       - name: Run Kind Cluster
         run: |
           ./registry.sh
@@ -37,12 +38,12 @@ jobs:
           cd server/
           docker build -t localhost:5000/http-server:latest .
           docker push localhost:5000/http-server:latest
-          docker push localhost:5000/producer:latest
       - name: Create Docker Image for KEDA Connector
         run: |
           cd keda-connectors/kafka-http-connector/
           docker build -t localhost:5000/kafka-connector:latest .
           docker push localhost:5000/kafka-connector:latest
+          docker push localhost:5000/producer:latest
       - name: Create Docker Image for Consumer
         run: |
           cd consumer/
