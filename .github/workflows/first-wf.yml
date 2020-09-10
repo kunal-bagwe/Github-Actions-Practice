@@ -68,7 +68,7 @@ jobs:
       - name: Produce messages
         run: |
           cd kafka/
-          kubectl apply -f kafka-producer.yml
+          kubectl apply -f kafka-producer.yaml
           kubectl wait -f kafka-producer.yaml --for=condition=ready --timeout=-1s -n kafka
       - name: Bring up HTTP Server
         run: |
