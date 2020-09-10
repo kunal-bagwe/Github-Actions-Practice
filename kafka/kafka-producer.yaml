@@ -28,7 +28,7 @@ spec:
           - name: LOG_LEVEL
             value: "INFO"
           - name: MESSAGE_COUNT
-            value: "1000000"
+            value: "10"
           - name: PRODUCER_ACKS
             value: "all"
           - name: ADDITIONAL_CONFIG

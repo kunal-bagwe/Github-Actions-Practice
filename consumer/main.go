@@ -38,9 +38,6 @@ func main() {
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt)
 
-	// Count how many message processed
-	msgCount := 0
-
 	// Get signnal for finish
 	doneCh := make(chan struct{})
 	go func() {
@@ -49,8 +46,7 @@ func main() {
 			case err := <-consumer.Errors():
 				fmt.Println(err)
 			case msg := <-consumer.Messages():
-				msgCount++
-				fmt.Println("Received messages", string(msg.Key), string(msg.Value))
+				fmt.Println(string(msg.Key), string(msg.Value))
 			case <-signals:
 				fmt.Println("Interrupt is detected")
 				doneCh <- struct{}{}
@@ -59,5 +55,4 @@ func main() {
 	}()
 
 	<-doneCh
-	fmt.Println("Processed", msgCount, "messages")
 }
