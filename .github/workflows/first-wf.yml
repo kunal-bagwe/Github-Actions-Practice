@@ -79,6 +79,11 @@ jobs:
           cd kafka/ 
           kubectl apply -f keda-deployment.yml
           kubectl apply -f Keda-ScaledObj.yml 
+      - name: Produce messages
+        run: |
+          cd kafka/
+          kubectl apply -f kafka-producer.yaml
+          kubectl wait -f kafka-producer.yaml --for=condition=ready --timeout=-1s -n kafka
       - name: Deploy Kafka consumer func and consumer deployment
         run: |
           cd consumer/
