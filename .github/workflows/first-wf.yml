@@ -48,8 +48,8 @@ jobs:
           kubectl apply -f kafka-cluster.yaml
           echo "Kafka Cluster is getting up."
           # sleep 10m
-          kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=my-cluster-test,app.kubernetes.io/managed-by=strimzi-cluster-operator,app.kubernetes.io/name=kafka,strimzi.io/kind=Kafka --timeout=-1s -n kafka
-          kubectl wait --for=condition=Ready pod  -l name=strimzi-cluster-operator,strimzi.io/kind=cluster-operator --timeout=-1s -n kafka
+          #kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=my-cluster-test,app.kubernetes.io/managed-by=strimzi-cluster-operator,app.kubernetes.io/name=kafka,strimzi.io/kind=Kafka --timeout=-1s -n kafka
+          kubectl wait -f kafka-cluster.yaml --for=condition=ready --timeout=-1s -n kafka
       - name: Create Kafka topics
         run: |
           cd kafka/
