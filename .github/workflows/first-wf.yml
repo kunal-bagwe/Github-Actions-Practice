@@ -46,12 +46,15 @@ jobs:
       - name: Deploy Kafka cluster
         run: |
           cd kafka/
-          kubectl create namespace kafka
+          okubectl create namespace kafka
           curl -L http://strimzi.io/install/latest | sed 's/namespace: .*/namespace: kafka/' | kubectl apply -f - -n kafka
           sleep 10s
           kubectl apply -f kafka-cluster.yaml
           echo "Kafka Cluster is getting up."
           kubectl wait -f kafka-cluster.yaml --for=condition=ready --timeout=-1s -n kafka
+          sleep 5m
+          kubectl get pods -n kafka
+          kubectl wait pod -l app.kubernetes.io/name=zookeeper --for=condition=ready --timeout=-1s -n kafka
       - name: Create Kafka topics
         run: |
           cd kafka/
@@ -67,6 +70,7 @@ jobs:
         run: |
           cd kafka/ 
           kubectl apply -f keda-deployment.yml
+          kubectl get pods -n kafka
           kubectl wait -f keda-deployment.yml --for=condition=ready --timeout=-1s -n kafka
           kubectl apply -f Keda-ScaledObj.yml 
       - name: Produce messages Using Producer
