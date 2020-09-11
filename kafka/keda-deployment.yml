@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: keda-kafka-connector
-        image: localhost:5000/kafka-connect:latest
+        image: localhost:5000/kafka-connector:latest
         env:
           - name: TOPIC
             value: request-topic
