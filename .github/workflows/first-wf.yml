@@ -48,9 +48,9 @@ jobs:
           cd kafka/
           kubectl create namespace kafka
           curl -L http://strimzi.io/install/latest | sed 's/namespace: .*/namespace: kafka/' | kubectl apply -f - -n kafka
-          sleep 5s
           kubectl apply -f kafka-cluster.yaml
           echo "Kafka Cluster is getting up."
+          sleep 5m
           kubectl wait -f kafka-cluster.yaml --for=condition=ready --timeout=-1s -n kafka
       - name: Create Kafka topics
         run: |
@@ -62,7 +62,7 @@ jobs:
         run: |
           cd server/
           kubectl apply -f server.yaml
-          kubectl wait -f server.yaml --for=condition=ready --timeout=-1s -n kafka
+          kubectl wait pod -l app=http --for=condition=ready --timeout=-1s -n kafka
       - name: Deploy Keda Connector and Keda ScaledObject
         run: |
           cd kafka/ 
