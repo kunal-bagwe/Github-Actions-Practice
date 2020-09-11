@@ -38,7 +38,6 @@ jobs:
           cd keda-connectors/kafka-http-connector/
           docker build -t localhost:5000/kafka-connector:latest .
           docker push localhost:5000/kafka-connector:latest
-          docker push localhost:5000/producer:latest
       - name: Create Docker Image for Consumer
         run: |
           cd consumer/
