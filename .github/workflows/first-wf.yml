@@ -21,11 +21,6 @@ jobs:
           curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
           chmod +x ./kind
           sudo mv ./kind /usr/bin/
-      - name: Pull Producer Image
-        run: |
-          docker pull strimzi/hello-world-producer:latest
-          docker tag strimzi/hello-world-producer:latest localhost:5000/producer:latest
-          docker images
       - name: Run Kind Cluster
         run: |
           ./registry.sh
@@ -57,7 +52,6 @@ jobs:
           sleep 5s
           kubectl apply -f kafka-cluster.yaml
           echo "Kafka Cluster is getting up."
-          # sleep 10m
           kubectl wait -f kafka-cluster.yaml --for=condition=ready --timeout=-1s -n kafka
       - name: Create Kafka topics
         run: |
@@ -65,28 +59,26 @@ jobs:
           kubectl apply -f kafka-req-topic.yaml 
           kubectl apply -f kafka-err-topic.yaml
           kubectl apply -f kafka-res-topic.yaml
-      - name: Produce messages
-        run: |
-          cd kafka/
-          kubectl apply -f kafka-producer.yaml
-          kubectl wait -f kafka-producer.yaml --for=condition=ready --timeout=-1s -n kafka
       - name: Bring up HTTP Server
         run: |
           cd server/
           kubectl apply -f server.yaml
+          kubectl wait -f server.yaml --for=condition=ready --timeout=-1s -n kafka
       - name: Deploy Keda Connector and Keda ScaledObject
         run: |
           cd kafka/ 
           kubectl apply -f keda-deployment.yml
+          kubectl wait -f keda-deployment.yml --for=condition=ready --timeout=-1s -n kafka
           kubectl apply -f Keda-ScaledObj.yml 
-      - name: Produce messages
+      - name: Produce messages Using Producer
         run: |
           cd kafka/
-          kubectl apply -f kafka-producer.yaml
-          kubectl wait -f kafka-producer.yaml --for=condition=ready --timeout=-1s -n kafka
-      - name: Deploy Kafka consumer func and consumer deployment
+          kubectl apply -f job.yaml -n kafka
+          kubectl wait -f job.yaml --for=condition=complete --timeout=-1s -n kafka
+          kubectl delete -f job.yaml
+      - name: Consume messages using consumer deployment
         run: |
           cd consumer/
           kubectl apply -f consumer.yaml
           kubectl wait -f consumer.yaml --for=condition=ready --timeout=-1s -n kafka
-          kubectl logs -l app=consumer --all-containers=true -f
+          kubectl logs -l app=consumer --all-containers=true -f -n kafka
