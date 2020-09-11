@@ -74,14 +74,14 @@ jobs:
           docker images
           sleep 15s
           kubectl get pods -n kafka
-          #kubectl wait -f keda-deployment.yml --for=condition=ready --timeout=-1s -n kafka
+          kubectl wait pod -l keda=kafka --for=condition=ready --timeout=30s -n kafka
           kubectl apply -f Keda-ScaledObj.yml 
       - name: Produce messages Using Producer
         run: |
           cd kafka/
           kubectl apply -f job.yaml -n kafka
           kubectl wait -f job.yaml --for=condition=complete --timeout=-1s -n kafka
-          kubectl delete -f job.yaml
+          kubectl delete job pi -n kafka
       - name: Consume messages using consumer deployment
         run: |
           cd consumer/
