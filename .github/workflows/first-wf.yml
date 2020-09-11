@@ -87,5 +87,5 @@ jobs:
           kubectl get pods -n kafka
           cd consumer/
           kubectl apply -f consumer-job.yaml
-          kubectl wait pod -l app=consumer --for=condition=ready --timeout=-1s -n kafka
+          kubectl wait -f consumer-job.yaml --for=condition=ready --timeout=-1s -n kafka
           kubectl logs -l app=consumer --all-containers=true -f -n kafka
