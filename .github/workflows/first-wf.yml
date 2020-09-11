@@ -82,10 +82,10 @@ jobs:
           kubectl apply -f job.yaml -n kafka
           kubectl wait -f job.yaml --for=condition=complete --timeout=-1s -n kafka
           kubectl delete job pi -n kafka
-      - name: Consume messages using consumer deployment
+      - name: Collect Consumer Messages
         run: |
           kubectl get pods -n kafka
           cd consumer/
-          kubectl apply -f consumer-job.yaml
-          kubectl wait -f consumer-job.yaml --for=condition=ready --timeout=-1s -n kafka
+          kubectl apply -f consumer-deployment.yaml
+          kubectl wait -l app=consumer --for=condition=ready --timeout=-1s -n kafka
           kubectl logs -l app=consumer --all-containers=true -f -n kafka
