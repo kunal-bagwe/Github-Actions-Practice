@@ -1,14 +1,16 @@
 name: Integration Test Suite WorkFlow
 
 on: 
-  push:
-    branches:
-      - master
+#  push:
+#    branches:
+#      - master
   pull_request:
+    types: [ labeled ]
     branches:
       - master
 jobs:
   integration-test:
+    if: ${{ github.event.label.name == 'kafka' || github.event.label.name == 'Kafka' github.event.label.name == 'KAFKA' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the current repo
