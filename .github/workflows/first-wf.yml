@@ -10,7 +10,7 @@ on:
     # - master
 jobs:
   integration-test:
-    if: ${{ github.event.label.name == 'kafka' || github.event.label.name == 'Kafka' github.event.label.name == 'KAFKA' }}
+    if: ${{ github.event.label.name == 'kafka' }} # || github.event.label.name == 'Kafka' github.event.label.name == 'KAFKA' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the current repo
