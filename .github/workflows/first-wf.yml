@@ -147,6 +147,7 @@ jobs:
           kubectl apply -n rabbits -f rabbit-configmap.yaml
           kubectl apply -n rabbits -f rabbit-secret.yaml
           kubectl apply -n rabbits -f rabbit-statefulset.yaml
+          bash test.sh
       - name: Bring up HTTP Server
         run: |
           cd server/

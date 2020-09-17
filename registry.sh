@@ -2,7 +2,7 @@
 set -o errexit
 
 # create registry container unless it already exists
-reg_name='registry'
+reg_name='registry-svc'
 reg_port='5000'
 running="$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)"
 if [ "${running}" != 'true' ]; then
@@ -12,7 +12,7 @@ if [ "${running}" != 'true' ]; then
 fi
 
 # create a cluster with the local registry enabled in containerd
-cat <<EOF | kind create cluster --name kind-registry-svc --config=-
+cat <<EOF | kind create cluster --name kind-local-registry --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
