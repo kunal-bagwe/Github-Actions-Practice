@@ -15,8 +15,8 @@ env:
 
 jobs:
   integration-test:
-    if: "contains(github.event.pull_request.labels.*.name, 'kafka')"
-    #if: ${{ github.event.label.name == 'kafka' }} || ${{ github.event.label.name == 'Kafka' }} || ${{ github.event.label.name == 'KAFKA' }}
+    if: "${{ github.event.label.name == 'kafka' }}"
+  #  if: "contains(github.event.pull_request.labels.*.name, 'kafka')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the current repo
@@ -98,7 +98,8 @@ jobs:
           kubectl wait pod -l app=consumer --for=condition=ready --timeout=-1s -n kafka
           kubectl logs -l app=consumer --all-containers=true -n kafka
   test:
-    if: "contains(github.event.pull_request.labels.*.name, 'rabbitmq'|| 'RABBITMQ'|| 'RabbitMQ')"
+    if: "${{ github.event.label.name == 'rabbitmq' }} || ${{ github.event.label.name == 'RABBITMQ' }} || ${{ github.event.label.name == 'RabbitMQ' }}"
+   # if: "contains(github.event.pull_request.labels.*.name, 'rabbitmq'|| 'RABBITMQ'|| 'RabbitMQ')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the current repo
