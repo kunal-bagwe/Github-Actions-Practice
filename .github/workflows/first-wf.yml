@@ -94,10 +94,70 @@ jobs:
           kubectl logs -l app=consumer --all-containers=true -n kafka
   test:
     if: "contains(github.event.pull_request.labels.*.name, 'rabbitmq'|| 'RABBITMQ'|| 'RabbitMQ')"
-    #if: ${{ github.event.label.name == 'rabbitmq' }} || ${{ github.event.label.name == 'RABBITMQ' }} || ${{ github.event.label.name == 'RabbitMQ' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Echo Test
+      - name: Checkout the current repo
+        uses: actions/checkout@v1
+      - name: Install Tool
         run: |
-          echo "Hello World"
+          curl -Lo ./kind ${{env.KIND_URL}}/${{env.KIND_VER}}/${{env.KIND_ENV}}
+          chmod +x ./kind
+          sudo mv ./kind /usr/bin/
+      - name: Run Kind Cluster
+        run: |
+          cd integration/
+          ./registry.sh
+          helm repo add kedacore https://kedacore.github.io/charts
+          helm repo update
+          kubectl create namespace keda
+          helm install keda kedacore/keda --namespace keda
+      - name: Create Docker Image for HTTP server
+        run: |
+          cd integration/server/
+          docker build -t localhost:5000/http-server:latest .
+          docker push localhost:5000/http-server:latest
+      - name: Create Docker Image for KEDA Connector
+        run: |
+          cd rabbitmq-http-connector/
+          docker build -t localhost:5000/rabbit-keda:latest .
+          docker push localhost:5000/rabbit-keda:latest
+      - name: Create Docker Image for Publisher
+        run: |
+          cd integration/rabbitmq/publisher/
+          docker build -t localhost:5000/rabbit-publisher:latest .
+          docker push localhost:5000/rabbit-publisher:latest
+      - name: Create Docker Image for Consumer
+        run: |
+          cd integration/rabbitmq/consumer/
+          docker build -t localhost:5000/rabbit-consumer:latest .
+          docker push localhost:5000/rabbit-consumer:latest
+      - name: Deploy Rabbitmq Deployment files
+        run: |
+          cd integration/rabbitmq/kubernetes/
+          kubectl create ns rabbits
+          kubectl apply -n rabbits -f rabbit-rbac.yaml
+          kubectl apply -n rabbits -f rabbit-configmap.yaml
+          kubectl apply -n rabbits -f rabbit-secret.yaml
+          kubectl apply -n rabbits -f rabbit-statefulset.yaml
+      - name: Bring up HTTP Server
+        run: |
+          cd integration/server/
+          kubectl apply -f server.yaml -n rabbits
+          kubectl wait pod -l app=http --for=condition=ready --timeout=-1s -n rabbits
+      - name: Deploy Keda Connector and Keda ScaledObject
+        run: |
+          cd integration/rabbitmq/kubernetes/
+          kubectl apply -f keda-deployment.yml
+          kubectl wait pod -l keda=rabbitmq --for=condition=ready --timeout=-1s -n rabbits
+          kubectl apply -f Keda-ScaledObj.yml
+      - name: Publish messages in a queue
+        run: |
+          cd integration/rabbitmq/publisher/
+          kubectl apply -f deployment.yaml
+      - name: Get consumed messages from queue
+        run: |
+          cd integration/rabbitmq/consumer/
+          kubectl apply -f consumer-deployment.yaml
+          kubectl wait pod -l app=rabbitmq-consumer --for=condition=ready --timeout=-1s -n rabbits
+          kubectl logs -l app=rabbitmq-consumer --all-containers=true -n rabbits
 
