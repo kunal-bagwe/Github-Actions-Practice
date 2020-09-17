@@ -8,6 +8,11 @@ on:
     types: [ labeled ]
     branches:
       - master
+env:
+  KIND_URL: https://kind.sigs.k8s.io/dl
+  KIND_VER: v0.8.1
+  KIND_ENV: kind-linux-amd64
+
 jobs:
   integration-test:
     if: "contains(github.event.pull_request.labels.*.name, 'kafka')"
