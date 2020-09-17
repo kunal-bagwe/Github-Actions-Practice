@@ -6,7 +6,7 @@ on:
     types: [ labeled ]
 jobs:
   test:
-    if: "contains(github.event.pull_request.labels.*.name, 'rabbitmq')" || "contains(github.event.pull_request.labels.*.name, 'RABBITMQ')" "contains(github.event.pull_request.labels.*.name, 'RabbitMQ')"
+    if: "contains(github.event.pull_request.labels.*.name, 'rabbitmq'|| 'RABBITMQ'|| 'RabbitMQ')"
     #if: ${{ github.event.label.name == 'rabbitmq' }} || ${{ github.event.label.name == 'RABBITMQ' }} || ${{ github.event.label.name == 'RabbitMQ' }}
     runs-on: ubuntu-latest
     steps:
