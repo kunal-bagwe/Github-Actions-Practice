@@ -1,4 +1,4 @@
-name: Integration Test WorkFlow
+name: Integration Test WF
 
 on: 
 #  push:
