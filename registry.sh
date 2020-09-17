@@ -2,12 +2,12 @@
 set -o errexit
 
 # create registry container unless it already exists
-reg_name='registry-svc'
+reg_name='registry-ex-config'
 reg_port='5000'
 running="$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)"
 if [ "${running}" != 'true' ]; then
   docker run \
-    -d --restart=always -p "${reg_port}:5000" --name "${reg_name}" \
+    -d --restart=always -p "${reg_port}:5000" --name "${reg_name}" --net=kind \
     registry:2
 fi
 
@@ -26,7 +26,7 @@ containerdConfigPatches:
 EOF
 
 # connect the registry to the cluster network
-docker network connect "kind" "${reg_name}"
+#docker network connect "kind" "${reg_name}"
 
 # tell https://tilt.dev to use the registry
 # https://docs.tilt.dev/choosing_clusters.html#discovering-the-registry
