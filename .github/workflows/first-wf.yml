@@ -167,6 +167,8 @@ jobs:
         run: |
           cd rabbitmq/kubernetes/
           kubectl apply -f keda-deployment.yml
+          sleep 30s
+          kubectl logs deployment.apps/keda-deployment -n rabbits
           kubectl wait pod -l keda=rabbitmq --for=condition=ready --timeout=-1s -n rabbits
           kubectl get pods -n rabbits
           kubectl logs deployment.apps/keda-deployment -n rabbits
