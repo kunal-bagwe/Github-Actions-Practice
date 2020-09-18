@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - test
-     pull_request:
-       types: [ labeled ]
-       branches:
-         - master
+  pull_request:
+    types: [ labeled ]
+    branches:
+      - master
 env:
   KIND_URL: https://kind.sigs.k8s.io/dl
   KIND_VER: v0.8.1
