@@ -154,6 +154,10 @@ jobs:
           cd server/
           kubectl apply -f server.yaml -n rabbits
           kubectl wait pod -l app=http --for=condition=ready --timeout=-1s -n rabbits
+      - name: Publish messages in a queue
+        run: |
+          cd rabbitmq/publisher/
+          kubectl apply -f deployment.yaml
       - name: Deploy Keda Connector and Keda ScaledObject
         run: |
           cd rabbitmq/kubernetes/
@@ -163,10 +167,10 @@ jobs:
           kubectl get pods -n rabbits
           kubectl logs deployment.apps/keda-deployment -n rabbits
           kubectl apply -f Keda-ScaledObj.yml
-      - name: Publish messages in a queue
-        run: |
-          cd rabbitmq/publisher/
-          kubectl apply -f deployment.yaml
+          #      - name: Publish messages in a queue
+          #run: |
+          #cd rabbitmq/publisher/
+          #kubectl apply -f deployment.yaml
       - name: Get consumed messages from queue
         run: |
           cd rabbitmq/consumer/
