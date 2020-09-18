@@ -158,6 +158,7 @@ jobs:
         run: |
           cd rabbitmq/publisher/
           kubectl apply -f deployment.yaml
+          kubectl apply -f publisher-job.yaml
       - name: Bring up the consumer queue and Listen for incoming messages
         run: |
           cd rabbitmq/consumer/
@@ -175,4 +176,4 @@ jobs:
       - name: Get consumed messages from queue
         run: |
           sleep 10s
-          kubectl logs -l app=rabbitmq-consumer -n rabbits
+          kubectl logs  -n rabbits deployment.apps/rabbitmq-consumer
