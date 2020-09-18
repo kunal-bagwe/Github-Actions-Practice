@@ -159,9 +159,9 @@ jobs:
           cd rabbitmq/publisher/
           kubectl apply -f deployment.yaml
       - name: Bring up the consumer queue and Listen for incoming messages
-      run: |
-        cd rabbitmq/consumer/
-        kubectl apply -f consumer-deployment.yaml
+        run: |
+          cd rabbitmq/consumer/
+          kubectl apply -f consumer-deployment.yaml
                 #kubectl apply -f consumer-job.yaml
       - name: Deploy Keda Connector and Keda ScaledObject
         run: |
