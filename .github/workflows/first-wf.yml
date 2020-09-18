@@ -175,4 +175,10 @@ jobs:
       - name: Get consumed messages from queue
         run: |
           kubectl logs -l app=rabbitmq-consumer --all-containers=true -n rabbits
-
+          res=$?
+          if [ "$res" -eq 0 ]
+          then
+            echo "Logs Fetched from a conssumer queue"
+          else
+            echo "Failed to Fetch Logs"
+          fi   
