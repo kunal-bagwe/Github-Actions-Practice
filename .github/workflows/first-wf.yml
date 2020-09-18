@@ -173,6 +173,7 @@ jobs:
           kubectl apply -f Keda-ScaledObj.yml
       - name: Get consumed messages from queue
         run: |
+          sleep 10s
           kubectl logs -l app=rabbitmq-consumer -n rabbits
                 #kubectl logs -l app=rabbitmq-consumer --all-containers=true -n rabbits
                 #          res=$?
