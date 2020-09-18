@@ -173,5 +173,5 @@ jobs:
           kubectl apply -f consumer-deployment.yaml
           kubectl wait pod -l app=rabbitmq-consumer --for=condition=ready --timeout=-1s -n rabbits
           sleep 15s
-          kubectl logs -f -l app=rabbitmq-consumer --all-containers=true -n rabbits
+          kubectl logs -l app=rabbitmq-consumer --all-containers=true -n rabbits
 
