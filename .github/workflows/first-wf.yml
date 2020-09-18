@@ -163,7 +163,7 @@ jobs:
         run: |
           cd rabbitmq/consumer/
           kubectl apply -f consumer-deployment.yaml
-          kubectl wait pod -l app=rabbitmq-consumer --for=condition=ready --timeout=-1s -n rabbits
+          kubectl apply -f consumer-job.yaml
       - name: Deploy Keda Connector and Keda ScaledObject
         run: |
           cd rabbitmq/kubernetes/
@@ -174,11 +174,12 @@ jobs:
           kubectl apply -f Keda-ScaledObj.yml
       - name: Get consumed messages from queue
         run: |
-          kubectl logs -l app=rabbitmq-consumer --all-containers=true -n rabbits
-          res=$?
-          if [ "$res" -eq 0 ]
-          then
-            echo "Logs Fetched from a conssumer queue"
-          else
-            echo "Failed to Fetch Logs"
-          fi   
+          kubectl logs -l name=consumer-job -n rabbits
+                #kubectl logs -l app=rabbitmq-consumer --all-containers=true -n rabbits
+                #          res=$?
+                #if [ "$res" -eq 0 ]
+                #then
+                #echo "Logs Fetched from a conssumer queue"
+                #else
+                #echo "Failed to Fetch Logs"
+                #fi   
