@@ -159,6 +159,11 @@ jobs:
           cd rabbitmq/publisher/
           kubectl apply -f deployment.yaml
           kubectl apply -f publisher-job.yaml
+      - name: Bring up the consumer queue and Listen for incoming messages
+        run: |
+          cd rabbitmq/consumer/
+          kubectl apply -f consumer-deployment.yaml
+          kubectl wait pod -l app=rabbitmq-consumer --for=condition=ready --timeout=-1s -n rabbits
       - name: Deploy Keda Connector and Keda ScaledObject
         run: |
           cd rabbitmq/kubernetes/
@@ -169,9 +174,6 @@ jobs:
           kubectl apply -f Keda-ScaledObj.yml
       - name: Get consumed messages from queue
         run: |
-          cd rabbitmq/consumer/
-          kubectl apply -f consumer-deployment.yaml
-          kubectl wait pod -l app=rabbitmq-consumer --for=condition=ready --timeout=-1s -n rabbits
           sleep 15s
           kubectl logs -l app=rabbitmq-consumer --all-containers=true -n rabbits
 
