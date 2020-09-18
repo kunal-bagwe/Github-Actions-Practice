@@ -3,7 +3,7 @@ name: Integration Test WF
 on: 
   push:
     branches:
-      - test
+      - master
   pull_request:
     types: [ labeled ]
     branches:
