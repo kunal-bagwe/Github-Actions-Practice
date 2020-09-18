@@ -158,7 +158,10 @@ jobs:
         run: |
           cd rabbitmq/kubernetes/
           kubectl apply -f keda-deployment.yml
-          kubectl wait pod -l keda=rabbitmq --for=condition=ready --timeout=-1s -n rabbits
+          #         kubectl wait pod -l keda=rabbitmq --for=condition=ready --timeout=-1s -n rabbits
+          sleep 40s
+          kubectl get pods -n rabbits
+          kubectl logs deployment.apps/keda-deployment -n rabbits
           kubectl apply -f Keda-ScaledObj.yml
       - name: Publish messages in a queue
         run: |
